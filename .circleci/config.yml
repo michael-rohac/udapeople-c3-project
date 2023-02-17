@@ -71,8 +71,8 @@ jobs:
           name: Analyze FE code
           command: |
             cd frontend
+            npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
-            
 
   scan-backend:
     <<: *defaults
@@ -84,6 +84,7 @@ jobs:
           name: Analyze BE code
           command: |
             cd backend
+            npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
 
 workflows:
