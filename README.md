@@ -1,64 +1,35 @@
-We are archiving this repository because we do not want learners to push personal development to the current repository. If you have any issues or suggestions to make, feel free to:
-- Utilize the https://knowledge.udacity.com/ forum to seek help on content-specific issues.
-- [Submit a support ticket](https://udacity.zendesk.com/hc/en-us/requests/new) along with the link to your forked repository. 
-- If you are an enterprise learner, please [Submit a support ticket here](https://udacityenterprise.zendesk.com/hc/en-us/requests/new?ticket_form_id=360000279131)
+# Issues
 
-## Give your Application Auto-Deploy Superpowers
+## CI - Issue in code analysis step 
 
-In this project, you will prove your mastery of the following learning objectives:
+For analysis phase was suggested to use npm check for critical dependencies. In my opinion this wasn't the best idea due to nondeterminism involved in this step.
+Despite JavaScript is not my main language, I worked with that a lot and keeping dependencies clean and smooth is relatively hard process which requires 
+very good knowledge of Node.js ecosystem and development project itself. There are many reasons behind this but let's mention at leas one for all.
 
-- Explain the fundamentals and benefits of CI/CD to achieve, build, and deploy automation for cloud-based software products.
-- Utilize Deployment Strategies to design and build CI/CD pipelines that support Continuous Delivery processes.
-- Utilize a configuration management tool to accomplish deployment to cloud-based servers.
-- Surface critical server errors for diagnosis using centralized structured logging.
+JavaScript is simply dynamically interpreted language. That's why it is very limited in detection of compatibility issues with 3rd party libs in comparison 
+to strongly typed compilable languages. Due to this in JavaScript world especially for package managers like npm, yarn and similar are given best practices
+saying how to set dependencies in order to get them resolved correctly. Anyhow, this is entirely let on developers and that's why resolving deps is critical 
+phase of each project and that's why JS world comes with lock files to at least ensure that deps are resolved the same in different developers machines over the
+time.
 
-![Diagram of CI/CD Pipeline we will be building.](udapeople.png)
+There are of course many scanners and other mechanisms trying to find vulnerabilities in JS packages which are then gradually reported to developers to let them
+react on this quickly. That's the whole sense here in this udapeople project, but there's no reliable command to fix this. If `npm audit fix` is used with 
+`--force` flag it may cause to reconstruct dependency tree in a way which is not any more with application code any more. That's exactly what I'm observing here.
+To fix fully dependency tree, update all problems you need either luck or developers who have deep technical insight into project and know what is used why and
+how to react on given deps issues. Some of them may need upgrades with some code changes (after testing), some of them may require complete replacement and again
+introducing significant code changes.
 
-### Instructions
+I'm obviously not the only one who stuck on this step. One relatively helpful mentors help was [described here](https://knowledge.udacity.com/questions/901582).
+From my point of view this is wrong approach, because forcing audit fix in CI analysis step means it's not actually applied to the code. Secondly there's a problem
+with fact, that udapeople project is relatively old and used dependencies are so out of date or obsolete that neither force flag helps.
 
-* [Selling CI/CD](instructions/0-selling-cicd.md)
-* [Getting Started](instructions/1-getting-started.md)
-* [Deploying Working, Trustworthy Software](instructions/2-deploying-trustworthy-code.md)
-* [Configuration Management](instructions/3-configuration-management.md)
-* [Turn Errors into Sirens](instructions/4-turn-errors-into-sirens.md)
+### Hints for making analysis phase more reliable for Udacity students
 
-### Project Submission
+The concept of static code analysis phase in CI pipeline is very important but I would recommend for JS projects some other step. It's better to use some linter
+with described rules and leave in code some issue like wrongly formatted line of code. For example if statement without curly brackets or something similar. Other
+alternative would be to measure code coverage and require certain level like 80%/60% for line/branch coverage. To let developers fail is possible to comment out
+some unit test which after uncommenting would bring developers to the right coverage. Intro to unit test code coverage would be also interesting part of this course.
 
-For your submission, please submit the following:
+I must say that didn't have too much time to dive deeper in development specifics of this project to introduce anything like this. That's why leaving it here as
+feedback with hints for improvement of the course.
 
-- A text file named `urls.txt` including:
-  1. Public Url to GitHub repository (not private) [URL01]
-  1. Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02]
-  1. Public URL for your CloudFront distribution (aka, your blue production front-end) [URL03]
-  1. Public URLs to deployed application back-end in EC2 [URL04]
-  1. Public URL to your Prometheus Server [URL05]
-- Your screenshots in JPG or PNG format, named using the screenshot number listed in the instructions. These screenshots should be included in your code repository in the root folder.
-  1. Job failed because of compile errors. [SCREENSHOT01]
-  1. Job failed because of unit tests. [SCREENSHOT02]
-  1. Job that failed because of vulnerable packages. [SCREENSHOT03]
-  1. An alert from one of your failed builds. [SCREENSHOT04]
-  1. Appropriate job failure for infrastructure creation. [SCREENSHOT05]
-  1. Appropriate job failure for the smoke test job. [SCREENSHOT06]
-  1. Successful rollback after a failed smoke test. [SCREENSHOT07]  
-  1. Successful promotion job. [SCREENSHOT08]
-  1. Successful cleanup job. [SCREENSHOT09]
-  1. Only deploy on pushed to `master` branch. [SCREENSHOT10]
-  1. Provide a screenshot of a graph of your EC2 instance including available memory, available disk space, and CPU usage. [SCREENSHOT11]
-  1. Provide a screenshot of an alert that was sent by Prometheus. [SCREENSHOT12]
-
-- Your presentation should be in PDF format named "presentation.pdf" and should be included in your code repository root folder. 
-
-Before you submit your project, please check your work against the project rubric. If you haven’t satisfied each criterion in the rubric, then revise your work so that you have met all the requirements. 
-
-### Built With
-
-- [Circle CI](www.circleci.com) - Cloud-based CI/CD service
-- [Amazon AWS](https://aws.amazon.com/) - Cloud services
-- [AWS CLI](https://aws.amazon.com/cli/) - Command-line tool for AWS
-- [CloudFormation](https://aws.amazon.com/cloudformation/) - Infrastrcuture as code
-- [Ansible](https://www.ansible.com/) - Configuration management tool
-- [Prometheus](https://prometheus.io/) - Monitoring tool
-
-### License
-
-[License](LICENSE.md)

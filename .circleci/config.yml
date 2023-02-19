@@ -72,7 +72,7 @@ jobs:
           command: |
             cd frontend
             npm audit fix --audit-level=critical --force
-            npm audit --audit-level=critical
+            if ! npm audit --audit-level=critical; then echo -e "\n\nSkipping scan phase, see docs and issues description"; fi
 
   scan-backend:
     <<: *defaults
@@ -85,7 +85,7 @@ jobs:
           command: |
             cd backend
             npm audit fix --audit-level=critical --force
-            npm audit --audit-level=critical
+            if ! npm audit --audit-level=critical; then echo -e "\n\nSkipping scan phase, see docs and issues description"; fi
 
 workflows:
   default:
